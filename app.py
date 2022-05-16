@@ -1,12 +1,12 @@
-# import hashlib
+import hashlib
 import json
 from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
-# from pymongo import MongoClient
+from pymongo import MongoClient
 # import jwt
 
-# client = MongoClient('localhost', 27017)
-# db = client.turtle
+client = MongoClient('localhost', 27017)
+db = client.turtle
 app = Flask(__name__)
 cors = CORS(app, resources={r"*": {"origins": "*"}})
 # SECRET_KEY = 'SPARTA'
@@ -25,28 +25,28 @@ def hello_world():
     return jsonify({'message': 'succasdess'})
 
 
-# @app.route("/signup", methods=["GET", "POST"])
-# def sign_up():
-#     # data = json.loads(request.data)
-#     # if request.method == "POST":
-#     #     id = data.get("id")
-#     #     pw = data.get("pw")`
-#     #     pw_hash = hashlib.sha256(pw.encode('utf-8')).hexdigest()
-
-#     #     doc = {
-#     #         "id": id,
-#     #         "pw": pw_hash,
-#     #     }
-
-#     #     db.users.insert_one(doc)
-
-#     #     return jsonify({"result": "회원가입 완료"})
-#     # else:
-#     #     return render_template('index.html')
-
-
-@app.route("/signup", methods=["POST"])
+@app.route("/signup", methods=["GET", "POST"])
 def sign_up():
+    data = json.loads(request.data)
+    if request.method == "POST":
+        id = data.get("id")
+        pw = data.get("pw")
+        pw_hash = hashlib.sha256(pw.encode('utf-8')).hexdigest()
+
+        doc = {
+            "id": id,
+            "pw": pw_hash,
+        }
+
+        db.users.insert_one(doc)
+
+        return jsonify({"result": "회원가입 완료"})
+    else:
+        return render_template('index.html')
+
+
+# @app.route("/signup", methods=["POST"])
+# def sign_up():
     # # 1. form-data 입력 방식
     # print(request)
     # print(request.form)
@@ -54,12 +54,12 @@ def sign_up():
     # print(request.form.get('pw'))  # id값을 못찾아도 오류 안남
     # return jsonify({'message': 'success'})
 
-    # 2. json 입력 방식
-    data = json.loads(request.data)
-    print(data)
-    print(data.get('id'))
-    print(data.get('pw'))
-    return jsonify({'message': 'success'})
+    # # 2. json 입력 방식
+    # data = json.loads(request.data)
+    # print(data)
+    # print(data.get('id'))
+    # print(data.get('pw'))
+    # return jsonify({'message': 'success'})
 
 
 if __name__ == '__main__':
