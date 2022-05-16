@@ -1,5 +1,6 @@
 import hashlib
 import json
+from unittest import result
 from flask import Flask, jsonify, render_template, request
 from flask_cors import CORS
 from pymongo import MongoClient
@@ -22,7 +23,7 @@ cors = CORS(app, resources={r"*": {"origins": "*"}})
 
 @app.route("/")
 def hello_world():
-    return jsonify({'message': 'succasdess'})
+    return jsonify({'message': 'success'})
 
 
 @app.route("/signup", methods=["GET", "POST"])
@@ -60,6 +61,10 @@ def sign_up():
     # print(data.get('id'))
     # print(data.get('pw'))
     # return jsonify({'message': 'success'})
+
+# @app.route('/login')
+# def login():
+#     return render_template('login.html')
 
 
 if __name__ == '__main__':
