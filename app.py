@@ -1,24 +1,14 @@
 import hashlib
 import json
 from unittest import result
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, redirect, render_template, request
 from flask_cors import CORS
 from pymongo import MongoClient
-# import jwt
 
 client = MongoClient('localhost', 27017)
 db = client.turtle
 app = Flask(__name__)
 cors = CORS(app, resources={r"*": {"origins": "*"}})
-# SECRET_KEY = 'SPARTA'
-
-
-# # def check_token():
-# #     # 현재 이용자의 컴퓨터에 저장된 cookie 에서 mytoken 을 가져옵니다.
-# #     token_receive = request.cookies.get('token')
-# #     # token을 decode하여 payload를 가져오고, payload 안에 담긴 유저 id를 통해 DB에서 유저의 정보를 가져옵니다.
-# #     payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-# #     return db.users.find_one({'id': payload['id']})
 
 
 @app.route("/")
@@ -41,9 +31,10 @@ def sign_up():
 
         db.users.insert_one(doc)
 
-        return jsonify({"result": "회원가입 완료"})
+        return jsonify({"result": "회원가입 완료!!!"})
     else:
-        return render_template('index.html')
+        return redirect('index.html')
+        # return render_template('index.html')
 
 
 # @app.route("/signup", methods=["POST"])
@@ -62,9 +53,13 @@ def sign_up():
     # print(data.get('pw'))
     # return jsonify({'message': 'success'})
 
-# @app.route('/login')
-# def login():
-#     return render_template('login.html')
+@app.route("/signup/check_id", methods=["POST"])
+def check_id():
+    data = json.loads(request.data)
+    id = data.get("id")
+    duplicated_id = db.users.find_one({'id': id})
+
+    return jsonify({"duplicated": bool(duplicated_id)})
 
 
 if __name__ == '__main__':
